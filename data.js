@@ -10,7 +10,7 @@ const assignments = [
     id: 2,
     course: 'Advanced Mathematics',
     title: 'Quiz 2',
-    dueDate: '2024-12-02T17:00:00Z',
+    dueDate: '2024-12-02T23:59:00Z',
     priority: 'Medium',
   },
 ];
