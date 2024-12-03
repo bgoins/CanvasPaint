@@ -24,7 +24,7 @@ function sendSms(to, message) {
             to: to,
         })
         .then(response => {
-            console.log(`Message sent: ${response.sid}`);
+            console.log(`SMS sent: ${response.sid}`);
             return { success: true, sid: response.sid };
         })
         .catch(error => {
