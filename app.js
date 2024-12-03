@@ -6,6 +6,9 @@ const WebSocket = require('ws');
 
 const axios = require('axios');
 
+// Import scheduler to handle Twilio reminders
+require('./scheduler'); // This will initiate the daily scheduler for reminders
+
 //Create new WebSocket server that listens on port 8080
 const WebSocketServer = new WebSocket.Server({ port: 8080 });
 
@@ -68,3 +71,6 @@ const testCanvasData = {
         { num: 3010, title: 'Final', dueDate: '2024-12-02' }
     ]
 };
+
+// Export the mock data so it can be accessed by other files
+module.exports = { testCanvasData };
