@@ -1,0 +1,21 @@
+{
+  "name": "canvas-paint",
+  "version": "0.0.0",
+  "description": "node canvasPaint.js",
+  "main": "app.js",
+  "author": "",
+  "devDependencies": {
+    "eslint": "^8.21.0"
+  },
+  "eslintConfig": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "crypto-js": "^4.2.0",
+    "ws": "^8.18.0"
+  }
+}
