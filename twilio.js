@@ -1,20 +1,13 @@
+// Replace these with your Twilio trial account credentials
+const accountSid = 'your_trial_account_sid_here'; // Your actual Twilio Account SID
+const authToken = 'your_trial_auth_token_here';   // Your actual Twilio Auth Token
+const twilioPhoneNumber = '+1234567890';          // Your Twilio phone number (should match the trial account number)
+
 const twilio = require('twilio');
-
-// Default values for Twilio credentials (placeholders)
-const accountSid = process.env.TWILIO_ACCOUNT_SID || 'default_account_sid';
-const authToken = process.env.TWILIO_AUTH_TOKEN || 'default_auth_token';
-const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER || '+1234567890';
-
-// Twilio client setup (using placeholder credentials if real ones are not available)
 const client = twilio(accountSid, authToken);
 
 // Function to send SMS using Twilio
 function sendSms(to, message) {
-    if (accountSid === 'default_account_sid' || authToken === 'default_auth_token') {
-        console.warn('Twilio credentials are not set. Skipping SMS sending.');
-        return Promise.resolve({ success: false, message: 'Twilio credentials are not configured' });
-    }
-
     return client.messages
         .create({
             body: message,
