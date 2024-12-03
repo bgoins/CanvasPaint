@@ -1,7 +1,7 @@
 
 const cron = require('node-cron');
-const { sendSms } = require('./twilio'); // Import the sendSms function
-const { testCanvasData } = require('./app'); // Import the mock data from app.js
+const { sendSms } = require('./twilio');
+const { testCanvasData } = require('./app');
 
 const enableTwilio = process.env.ENABLE_TWILIO || false;
 
@@ -13,14 +13,14 @@ cron.schedule('0 0 * * *', () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-    const tomorrowDateString = tomorrow.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    const tomorrowDateString = tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD
 
     // Filter assignments due tomorrow and send reminders
     if (enableTwilio) {
         testCanvasData.assignments.forEach(assignment => {
             if (assignment.dueDate === tomorrowDateString) {
                 const message = `Reminder: Your assignment '${assignment.title}' is due tomorrow (${assignment.dueDate}).`;
-                const phoneNumber = process.env.TWILIO_PHONE_NUMBER; // Using the phone number from .env
+                const phoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
                 // Send reminder via Twilio
                 sendSms(phoneNumber, message);
