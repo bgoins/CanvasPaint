@@ -22,8 +22,9 @@ WebSocketServer.on('connection', ws => {
     });
 
     //Code used to test API calls with mock data
-    ws.send(JSON.stringify(testCanvasData))
-    
+    if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(testCanvasData));
+    }
     
 
     //Function to get data from Canvas API
