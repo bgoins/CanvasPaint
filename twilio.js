@@ -13,8 +13,8 @@ const client = twilio(accountSid, authToken);
 // Function to send SMS using Twilio
 function sendSms(to, message) {
     if (accountSid === 'default_account_sid' || authToken === 'default_auth_token') {
-        console.warn('Twilio credentials are not set. Skipping SMS sending.');
-        return Promise.resolve({ success: false, message: 'Twilio credentials are not configured' });
+        console.warn('Twilio credentials are not set. Skipping SMS.');
+        return Promise.resolve({ success: false, message: 'Twilio credentials not set' });
     }
 
     return client.messages
@@ -24,7 +24,7 @@ function sendSms(to, message) {
             to: to,
         })
         .then(response => {
-            console.log(`Message sent successfully: ${response.sid}`);
+            console.log(`Message sent: ${response.sid}`);
             return { success: true, sid: response.sid };
         })
         .catch(error => {
