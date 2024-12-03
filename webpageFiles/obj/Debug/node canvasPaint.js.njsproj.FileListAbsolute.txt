@@ -1,0 +1,3 @@
+C:\SoftEngr Project\CanvasPaint\obj\Debug\node canvasPaint.js.njsproj.AssemblyReference.cache
+C:\SoftEngr Project\CanvasPaint\obj\Debug\node canvasPaint.js.njsproj.CoreCompileInputs.cache
+C:\SoftEngr Project\CanvasPaint\bin\Microsoft.NodejsTools.WebRole.dll

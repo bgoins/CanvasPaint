@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\SoftEngr Project\\CanvasPaint\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FD76E468-89B6-45B8-AED3-6FCED31510E1}|node canvasPaint.js.njsproj|C:\\SoftEngr Project\\CanvasPaint\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{FD76E468-89B6-45B8-AED3-6FCED31510E1}|node canvasPaint.js.njsproj|solutionrelative:app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "app.js",
+              "DocumentMoniker": "C:\\SoftEngr Project\\CanvasPaint\\app.js",
+              "RelativeDocumentMoniker": "app.js",
+              "ToolTip": "C:\\SoftEngr Project\\CanvasPaint\\app.js",
+              "RelativeToolTip": "app.js",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-12-02T22:40:29.321Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

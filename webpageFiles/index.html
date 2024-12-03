@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Paint</title>
+    <style>
+
+        /* Global reset for consistent styling*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Basic body styling and layout */
+        body {
+            display: flex;
+        }
+
+        /* Left tool bar styling */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        /* Styling for subsections in tool bar */
+            .sidebar a {
+                padding: 15px 20px;
+                text-decoration: none;
+                color: white;
+                border-bottom: 1px solid #444;
+                cursor: pointer;             
+            
+            }
+
+            /* Mouse hover effect for left tool bar */
+                .sidebar a:hover {
+                    background-color: #575757;
+                }
+
+            /* Highlight current selection effect */
+                .sidebar a.active {
+                    background-color: #575757;
+                    font-weight: bold;
+                }
+
+        /* Main content styling */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 20px;
+            background-color: #f4f4f4;
+            overflow-y: auto;
+        }
+
+        /* Individual course container styling */
+        .course-card {
+            background: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styling for listed assignments withing course container */
+        .assignments-list {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button for toggling all assignment list */
+        .toggle-assignments-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+            margin-bottom: 4px;
+        }
+
+        /* Hover effect for toggle assignment list button */
+        .toggle-assignments-btn:hover {
+            background-color: #575757;
+        }
+
+            ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .course-card h2 {
+                margin-bottom: 10px;
+            }
+
+        /* Styling for dropdown view of assignments list */
+        .dropdown {
+            margin-top: 10px;
+        }
+
+            .dropdown select {
+                padding: 5px;
+                font-size: 14px;
+            }
+
+        /* Styling for add assignments button */
+        .add-assignment {
+            margin-top: 20px;
+        }
+
+            .add-assignment button {
+                padding: 10px;
+                background-color: #333;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            /* Hover effect for assignment button */
+                .add-assignment button:hover {
+                    background-color: #575757;
+                }
+        
+        /* Styling for color indicator */
+        .status-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            border: 1px solid #fff;
+        }
+
+        .assignment-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        /* Styling for open and hidden tabs */
+        .tab-content {
+            display: none;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+    </style>
+
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Canvas Paint</h2>
+        <a href="#" class="tab-link active" data-tab="dashboard">Dashboard</a>
+        <a href="#" class="tab-link" data-tab="settings">Settings</a>
+        <a href="#" class="tab-link" data-tab="report-issues">Report Issues</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <h1>Dashboard</h1>
+            <p>Welcome to Canvas Paint!</p>
+            <div id="course-list"></div>
+
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <h1>Settings</h1>
+            <p>Customize the days for each color:</p>
+            <!--Input fields for color preferences-->
+            <div>
+                <label>Red (days):</label>
+                <input id="red-threshold">
+                <label> (Automatically set to 1 day from due.)</label>
+
+            </div>
+            <div>
+                <label>Yellow (days):</label>
+                <input id="yellow-threshold">
+                <label> (Automatically set to 2-7 days from due.)</label>
+
+            </div>
+            <div>
+                <label>Green (days):</label>
+                <input id="green-threshold">
+                <label> (Automatically set to 8 or more days from due.)</label>
+
+            </div>
+            <!--Button that calls function to update color indicator meaning when pressed-->
+            <button onclick="updateIndicators()">Save Changes</button>
+
+            <hi id="message"> </h1>
+        </div>
+
+        <!-- Reporting Issues Tab -->
+        <div id="report-issues" class="tab-content">
+            <h1>Report Issues</h1>
+            <p>Email: canvaspainthelp@gmail.com</p>
+            <p>Please contact the Canvas Paint help team with any issues, questions, or recommendations via email.</p>
+        </div>
+    </div>
+
+    <script>
+        //WebSocket setup to connect server
+        const ws = new WebSocket('ws://localhost:8081');
+
+        ws.onopen = () => {
+            console.log('Connected to the WebSocket server');
+        };
+
+        //Websocket event to display message to console when connection to server is disconnected.
+        ws.onclose = () => {
+            console.log('Disconnected from the WebSocket server');
+        };
+
+        //Check if user is logged in, if not redirect to log in page
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        //Global constants for color indicators
+        const colorIndicators = {
+            red: 2,
+            yellow: 7,
+            green: 14
+        };
+
+        //Websocket event to handle messages from server
+        ws.onmessage = (event) => {
+            console.log(event.data);
+
+            const data = JSON.parse(event.data);
+
+            const courseListDiv = document.getElementById('course-list');
+
+            //Display all course and information about each course retrieved from the server in the course container.
+
+            data.courses.forEach(course => {
+
+                const courseCard = document.createElement('div');
+
+                courseCard.classList.add('course-card');
+
+                //Populate course container with course assignments, color indicators, and due dates.
+                courseCard.innerHTML = `
+                            <h2>${course.name} (Section ${course.section})</h2>
+                            <button class="toggle-assignments-btn" onclick="toggleAssignments(${course.num})">
+                                View All Assignments
+                            </button>
+                            <div id="assignments-list-${course.num}" class="assignments-list" style="display: none;">
+                                <!-- All assignments will be listed here -->
+                            </div>
+
+                            <h3>Assignments Due in Two Weeks</h3>
+                            <ul id="upcoming-assignments-${course.num}">
+                                <!-- Assignments due in two weeks will be listed here -->
+                            </ul>
+                            <div class="add-assignment">
+                                <button onclick="addAssignment(${course.num})">Add Assignment</button>
+                            </div>
+                        `;
+
+                //Store assignment data and sort assignments based on due dates
+                const assignmentsTab = courseCard.querySelector(`#assignments-list-${course.num}`);
+                const assignments = data.assignments
+                    .filter(assignment => assignment.num === course.num && assignment.dueDate)
+                    .sort((x, y) => new Date(x.dueDate) - new Date(y.dueDate))
+
+                //Retrieve user added assignments from local storage, if there are none return empty list
+                const userAssignments = JSON.parse(localStorage.getItem('assignments')) || [];
+
+                //Sort user added assignments based on due dates
+                const filteredUserAssignments = userAssignments
+                    .filter(assignment => assignment.num === course.num)
+                    .sort((x, y) => new Date(x.dueDate) - new Date(y.dueDate));
+
+                // Combine assignments from canvas and added assignments. Filter out those past due by more than a week.
+                const allAssignments = [...assignments, ...filteredUserAssignments].filter(assignment => {
+                    const today = new Date();
+                    const dueDate = new Date(assignment.dueDate);
+                    const oneWeekAgo = new Date(today);
+                    oneWeekAgo.setDate(today.getDate() - 7);
+
+                    return dueDate >= oneWeekAgo;
+                });
+
+                //If there are assignments populate all assignments tab with assignment name, due date, and color indicator
+                if (allAssignments.length > 0) {
+                    allAssignments.forEach(assignment => {
+                        const assignmentItem = document.createElement('div');
+                        assignmentItem.classList.add('assignment-item');
+
+                        const statusCircle = document.createElement('span');
+                        statusCircle.classList.add('status-circle');
+
+                        //Retrieve correspronding color for color indicator circle and add next to assignment name
+                        statusCircle.style.backgroundColor = getStatusColor(assignment.dueDate);
+                        assignmentItem.appendChild(statusCircle);
+
+                        const assignmentText = document.createTextNode(` ${assignment.title} (Due: ${assignment.dueDate})`);
+                        assignmentItem.appendChild(assignmentText);
+
+                        assignmentsTab.appendChild(assignmentItem);
+                    });
+
+                //Display message indicating there are no assignments if none were retrieved
+                } else {
+                    const noAssignments = document.createElement('div');
+                    noAssignments.textContent = `No assignments available.`;
+                    assignmentsTab.appendChild(noAssignments);
+                }
+
+                //Determine which assignments are due within two weeks to display in separate section of course container
+                const upcomingAssignmentsList = courseCard.querySelector(`#upcoming-assignments-${course.num}`);
+                const upcomingAssignments = allAssignments.filter(assignment => upcomingAssignment(assignment.dueDate));
+
+                //If there are assignments due in two due weeks, sort assignments by due date.
+                if (upcomingAssignments.length > 0) {
+
+                    upcomingAssignments.forEach(assignment => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${assignment.title} (Due: ${assignment.dueDate})`;
+                        upcomingAssignmentsList.appendChild(listItem);
+                    });
+                //Display message indicating there are no assignments due in two weeks
+                } else {
+                    const noUpcomingAssignments = document.createElement('li');
+                    noUpcomingAssignments.textContent = `No assignments due in the next two weeks.`;
+                    upcomingAssignmentsList.appendChild(noUpcomingAssignments);
+                }
+
+                courseListDiv.appendChild(courseCard);
+            });
+        };
+
+        // Function to verify an assignment is due within two weeks
+        function upcomingAssignment(dueDate) {
+            const due = new Date(dueDate);
+            const today = new Date();
+            const twoWeeksOut = new Date();
+            twoWeeksOut.setDate(today.getDate() + 14);
+            return due <= twoWeeksOut;
+        }
+
+        //Function that adds a an assignment based on user input when Add Assignment button is clicked
+        function addAssignment(courseNum) {
+            //Prompt user for assignment name and date
+            let assignmentTitle = prompt("Enter the assignment title:");
+            let assignmentDueDate = prompt("Enter the due date (YYYY-MM-DD):");
+
+            //If the user enters a valid assignment name and due date, add the assignment to local storage
+            if (assignmentTitle && assignmentDueDate) {
+                newAssignment = {
+                    num: courseNum,
+                    title: assignmentTitle,
+                    dueDate: assignmentDueDate
+                };
+
+                let savedAssignments = JSON.parse(localStorage.getItem('assignments')) || [];
+
+                savedAssignments.push(newAssignment);
+
+                localStorage.setItem('assignments', JSON.stringify(savedAssignments));
+
+                console.log('Adding assignment:', newAssignment);
+
+            }
+        }
+
+        //Function to assign colors using current date and the due data
+        function getStatusColor(dueDate) {
+            const due = new Date(dueDate);
+            const today = new Date();
+
+            // Get saved values from localStorage or use default values
+            const savedRed = JSON.parse(localStorage.getItem('redValue')) || colorIndicators.red;
+            const savedYellow = JSON.parse(localStorage.getItem('yellowValue')) || colorIndicators.yellow;
+            const savedGreen = JSON.parse(localStorage.getItem('greenValue')) || colorIndicators.green;
+
+            // Calculate the indicator color based on current date and saved/default values
+            const redIndicator = new Date(today);
+            const yellowIndicator = new Date(today);
+            const greenIndicator = new Date(today);
+
+            redIndicator.setDate(today.getDate() + savedRed);
+            yellowIndicator.setDate(today.getDate() + savedYellow);
+            greenIndicator.setDate(today.getDate() + savedGreen);
+
+            // Compare the due date with the date of the indicator
+            if (due < redIndicator && due >= today) {
+                return 'red';
+            } else if (due < yellowIndicator && due >= today) {
+                return 'goldenrod';
+            } else if (due >= greenIndicator || due >= yellowIndicator) {
+                return 'green';
+            } else if (due < today) {
+                return 'gray'; //Color for assignment that is past due
+            }
+        }
+
+        //Function to update color indicators based on user specifications
+        function updateIndicators() {
+
+            //Get user input from input fields
+            let redValue = parseInt(document.querySelector('#red-threshold').value, 10);
+            let yellowValue = parseInt(document.querySelector('#yellow-threshold').value, 10);
+            let greenValue = parseInt(document.querySelector('#green-threshold').value, 10);
+
+            //Verify the input is at least more than zero and add preferences to local storage.
+            if (redValue > 0 && yellowValue > 0 && greenValue > 0) {
+
+                localStorage.setItem('redValue', JSON.stringify(redValue))
+                localStorage.setItem('yellowValue', JSON.stringify(yellowValue))
+                localStorage.setItem('greenValue', JSON.stringify(greenValue))
+
+                alert('Color indicators updated!');
+
+            }
+            //Display error message if input is not valid
+            else {
+                alert('Please enter valid numbers for the indicators.');
+            }
+        }
+
+        //Function to encrypt sensitive data
+        function encryptData(data, secretKey) {
+            return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+        }
+
+        //Function to dencrypt sensistive data upon retrieval
+        function decryptData(encryptedData, secretKey) {
+            if (typeof encryptedData !== 'string' || encryptedData.trim() === '') {
+                console.warn('No encrypted data to decrypt');
+                return [];
+            }
+
+            const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+            const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+
+            if (!decryptedText) {
+                console.error('Decryption failed. Invalid data.');
+                return [];
+            }
+
+            return JSON.parse(decryptedText);
+        }
+
+
+        //Function to control visibility of all assignments tab
+        function toggleAssignments(courseNum) {
+
+            const assignmentsList = document.getElementById(`assignments-list-${courseNum}`);
+            assignmentsList.style.display = assignmentsList.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Tab switching functionality
+        const links = document.querySelectorAll('.tab-link');
+        const contents = document.querySelectorAll('.tab-content');
+
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Remove active class from all links and contents
+                links.forEach(link => link.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to the clicked link and the corresponding tab content
+                link.classList.add('active');
+                const tabId = link.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
