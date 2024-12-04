@@ -372,6 +372,7 @@
         function updateSettings() {
             // Get user input from input field
             let phoneNumber = document.querySelector('#phone-number').value;
+            let reminderDays = document.querySelector('#reminder-days').value;
 
             // Verify input with basic validation for phone number format (must start with + and contain at least 10 digits)
             const phoneRegex = /^\+\d{10,}$/;
