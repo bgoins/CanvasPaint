@@ -370,32 +370,30 @@
 
         // Function to verify an assignment is due within two weeks
         function updateSettings() {
-            // Get user input from input field
             let phoneNumber = document.querySelector('#phone-number').value;
             let reminderDays = document.querySelector('#reminder-days').value;
 
-            // Verify input with basic validation for phone number format (must start with + and contain at least 10 digits)
             const phoneRegex = /^\+\d{10,}$/;
-                if (phoneRegex.test(phoneNumber)) {
+            if (phoneRegex.test(phoneNumber)) {
                 localStorage.setItem('phoneNumber', phoneNumber);
                 alert('Phone number updated successfully!');
 
-                // Send phone number to the WebSocket server
+                // Send phone number and reminder days to the WebSocket server
                 if (ws.readyState === WebSocket.OPEN) {
                     const data = {
-                        type: 'updatePhoneNumber',
-                        phoneNumber: phoneNumber
-                    };
+                        type: 'updateSettings',
+                        phoneNumber: phoneNumber,
+                        reminderDays: reminderDays
+                     };
                     ws.send(JSON.stringify(data));
                 } else {
-                    console.error('WebSocket is not open. Unable to send phone number.');
+                    console.error('WebSocket is not open. Unable to send settings.');
                 }
 
             } else {
                 alert('Please enter a valid phone number in the format: +1234567890');
             }
         }
-    
         //Function that adds a an assignment based on user input when Add Assignment button is clicked
         function addAssignment(courseNum) {
             //Prompt user for assignment name and date
