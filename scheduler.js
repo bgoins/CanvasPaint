@@ -33,14 +33,19 @@ cron.schedule('0 0 * * *', () => {
             const message = `Reminder: Your assignment '${assignment.title}' is due tomorrow (${assignment.dueDate}).`;
 
             // Send reminder via Twilio
-            sendSms(userPhoneNumber, message)
-                .then(response => {
-                    if (response.success) {
-                        console.log(`Reminder sent for assignment: ${assignment.title}`);
-                    } else {
-                        console.error(`Failed to send reminder for assignment: ${assignment.title}. Error: ${response.error}`);
-                    }
-                });
+            if (phoneNumber) {
+                const message = `Reminder: Your assignment '${assignment.title}' is due tomorrow (${assignment.dueDate}).`;
+                sendSms(phoneNumber, message)
+                    .then(response => {
+                        if (response.success) {
+                            console.log(`Reminder sent for assignment: ${assignment.title}`);
+                        } else {
+                            console.error(`Failed to send reminder for assignment: ${assignment.title}. Error: ${response.error}`);
+                        }
+                    });
+            } else {
+                console.log('No phone number found. SMS reminders cannot be sent.');
+            }
         }
     });
 });
