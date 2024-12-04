@@ -371,7 +371,8 @@
             twoWeeksOut.setDate(today.getDate() + 14);
             return due <= twoWeeksOut;
         }
-      
+        
+        // Function that updates user settings with phone number and checks if its valid or not.
         function updateSettings() {
         // Get user input from input field
         let phoneNumber = document.querySelector('#phone-number').value;
