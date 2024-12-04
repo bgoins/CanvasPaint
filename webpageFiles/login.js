@@ -37,6 +37,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     // Validate creditentials user gave with stored credentials
     if (username === storedEmail && password === storedPassword) {
         alert("Login successful!");
+        localStorage.setItem("isLoggedIn",'true');
         // Redirect to the main application page
         window.location.href = "index.html"; 
     }

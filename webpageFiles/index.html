@@ -231,6 +231,7 @@
         //WebSocket setup to connect server
         const ws = new WebSocket('ws://localhost:8081');
 
+        //WebSocket event upon connecting to server
         ws.onopen = () => {
             console.log('Connected to the WebSocket server');
         };
@@ -241,9 +242,9 @@
         };
 
         //Check if user is logged in, if not redirect to log in page
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
-            window.location.href = 'login.html';
-        }
+        // if (localStorage.getItem('isLoggedIn') !== 'true') {
+        //     window.location.href = 'login.html';
+        // }
 
         //Global constants for color indicators
         const colorIndicators = {
@@ -254,11 +255,12 @@
 
         //Websocket event to handle messages from server
         ws.onmessage = (event) => {
-            console.log(event.data);
-
             const data = JSON.parse(event.data);
 
             const courseListDiv = document.getElementById('course-list');
+
+            // Clear the existing content in course-list before adding new content
+            courseListDiv.innerHTML = '';
 
             //Display all course and information about each course retrieved from the server in the course container.
 
