@@ -1,8 +1,12 @@
 # CanvasPaint
 Ashlee Paradis, Reese Noller, Brian Goins, Dallin Hunt
+
 Kathleen Stempeck
+
 CS3300 004
+
 3 December 2024
+
 README File for Tas
 
 # Project Overview
