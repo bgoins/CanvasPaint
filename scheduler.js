@@ -8,6 +8,7 @@ const { testCanvasData } = require('./app');
 // Checks Twilio integration and defaults to false if var isn't set
 const enableTwilio = process.env.ENABLE_TWILIO || false;
 
+const enableTwilio = process.env.ENABLE_TWILIO === 'true';
 // Scheduler setup to send SMS reminders daily at midnight (00:00)
 cron.schedule('0 0 * * *', () => {
     // Msg to indicate its running the job
