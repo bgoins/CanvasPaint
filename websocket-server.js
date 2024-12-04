@@ -21,9 +21,16 @@ WebSocketServer.on('connection', ws => {
         ws.send(JSON.stringify(testCanvasData));
     }
     
-    //Listen for messages 
+    // Listen for messages 
     ws.on('message', message => {
-        console.log(`Message recieved => ${message}`);
+        console.log(`Message received: ${message}`);
+        
+        const data = JSON.parse(message);
+        if (data.type === 'updateSettings') {
+            // Here, you can save the phone number and reminder settings
+            console.log(`Phone number received: ${data.phoneNumber}`);
+            console.log(`Reminder days received: ${data.reminderDays}`);
+        }
     });
 
     //Code used to test API calls with mock data
