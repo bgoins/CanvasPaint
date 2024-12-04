@@ -7,6 +7,7 @@ const path = require('path');
 
 const app = express();
 
+app.use(bodyParser.json());
 //Specify the path to pull files from
 app.use(express.static(path.join(__dirname)));
 
