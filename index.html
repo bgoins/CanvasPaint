@@ -364,41 +364,27 @@
         };
 
         // Function to verify an assignment is due within two weeks
-        function upcomingAssignment(dueDate) {
-            const due = new Date(dueDate);
-            const today = new Date();
-            const twoWeeksOut = new Date();
-            twoWeeksOut.setDate(today.getDate() + 14);
-            return due <= twoWeeksOut;
-        }
-        
-        // Function that updates user settings with phone number and checks if its valid or not.
         function updateSettings() {
             // Get user input from input field
             let phoneNumber = document.querySelector('#phone-number').value;
 
             // Verify input with basic validation for phone number format (must start with + and contain at least 10 digits)
             const phoneRegex = /^\+\d{10,}$/;
-            if (phoneRegex.test(phoneNumber)) {
+                if (phoneRegex.test(phoneNumber)) {
                 localStorage.setItem('phoneNumber', phoneNumber);
                 alert('Phone number updated successfully!');
 
-                // Send phone number to the server
-                fetch('/api/update-phone-number', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ phoneNumber }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Phone number saved on server:', data);
-                })
-                .catch(error => {
-                    console.error('Error saving phone number on server:', error);
-                });
-                
+                // Send phone number to the WebSocket server
+                if (ws.readyState === WebSocket.OPEN) {
+                    const data = {
+                        type: 'updatePhoneNumber',
+                        phoneNumber: phoneNumber
+                    };
+                    ws.send(JSON.stringify(data));
+                } else {
+                    console.error('WebSocket is not open. Unable to send phone number.');
+                }
+
             } else {
                 alert('Please enter a valid phone number in the format: +1234567890');
             }
