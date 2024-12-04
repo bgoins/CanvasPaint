@@ -12,7 +12,13 @@ const enableTwilio = process.env.ENABLE_TWILIO || false;
 cron.schedule('0 0 * * *', () => {
     // Msg to indicate its running the job
     console.log('Running daily reminder job...');
-
+    
+    if (!enableTwilio) {
+        // Logs msg that Twilio integration is disabled
+        console.log('Twilio integration is disabled. SMS reminders will not be sent.');
+        return;
+    }
+    
     // Get today's date and the date for the next day
     const today = new Date();
     const tomorrow = new Date(today);
