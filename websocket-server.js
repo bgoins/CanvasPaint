@@ -16,6 +16,11 @@ const WebSocketServer = new WebSocket.Server({ port: 8080 });
 //Event when client connects to WebSocket server
 WebSocketServer.on('connection', ws => {
 
+    // Send initial data to the connected client
+    if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(testCanvasData));
+    }
+    
     //Listen for messages 
     ws.on('message', message => {
         console.log(`Message recieved => ${message}`);
