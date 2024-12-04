@@ -374,16 +374,34 @@
         
         // Function that updates user settings with phone number and checks if its valid or not.
         function updateSettings() {
-        // Get user input from input field
-        let phoneNumber = document.querySelector('#phone-number').value;
+            // Get user input from input field
+            let phoneNumber = document.querySelector('#phone-number').value;
 
-        // Verify input with basic validation for phone number format (must start with + and contain at least 10 digits)
-        const phoneRegex = /^\+\d{10,}$/;
-        if (phoneRegex.test(phoneNumber)) {
-            localStorage.setItem('phoneNumber', phoneNumber);
-            alert('Phone number updated successfully!');
-        } else {
-            alert('Please enter a valid phone number in the format: +1234567890');
+            // Verify input with basic validation for phone number format (must start with + and contain at least 10 digits)
+            const phoneRegex = /^\+\d{10,}$/;
+            if (phoneRegex.test(phoneNumber)) {
+                localStorage.setItem('phoneNumber', phoneNumber);
+                alert('Phone number updated successfully!');
+
+                // Send phone number to the server
+                fetch('/api/update-phone-number', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phoneNumber }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Phone number saved on server:', data);
+                })
+                .catch(error => {
+                    console.error('Error saving phone number on server:', error);
+                });
+                
+            } else {
+                alert('Please enter a valid phone number in the format: +1234567890');
+            }
         }
     
         //Function that adds a an assignment based on user input when Add Assignment button is clicked
