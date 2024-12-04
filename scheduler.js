@@ -22,31 +22,30 @@ cron.schedule('0 0 * * *', () => {
     const tomorrowDateString = tomorrow.toISOString().split('T')[0];
 
     // Filter assignments due tomorrow and send reminders
-    if (enableTwilio) {
-        testCanvasData.assignments.forEach(assignment => {
-            if (assignment.dueDate === tomorrowDateString) {
-                // Creates SMS msg for reminder and retrieves phone # to send SMS from and sneds using Twilio
+    testCanvasData.assignments.forEach(assignment => {
+        if (assignment.dueDate === tomorrowDateString) {
+            // Replace with the actual phone number you have for each user
+            const phoneNumber = process.env.USER_PHONE_NUMBER; // Replace with actual storage logic
+
+            if (phoneNumber) {
+                // Creates SMS message for reminder and sends using Twilio
                 const message = `Reminder: Your assignment '${assignment.title}' is due tomorrow (${assignment.dueDate}).`;
-                const phoneNumber = localStorage.getItem('phoneNumber'); // Get phone number from local storage
-                    if (phoneNumber && enableTwilio) {
-                        testCanvasData.assignments.forEach(assignment => {
-                            if (assignment.dueDate === tomorrowDateString) {
-                            const message = `Reminder: Your assignment '${assignment.title}' is due tomorrow (${assignment.dueDate}).`;
-                            sendSms(phoneNumber, message);
-                        }
-                    });
-                } else {
-                    console.log('Twilio integration is disabled or phone number not set. SMS reminders will not be sent.');
-                }
 
                 // Send reminder via Twilio
-                sendSms(phoneNumber, message);
+                sendSms(phoneNumber, message)
+                    .then(response => {
+                        if (response.success) {
+                            console.log(`Reminder sent for assignment: ${assignment.title}`);
+                        } else {
+                            console.error(`Failed to send reminder for assignment: ${assignment.title}. Error: ${response.error}`);
+                        }
+                    });
+            } else {
+                console.log('No phone number found. SMS reminders cannot be sent.');
             }
-        });
-    } else {
-        // Logs msg that twilio integration is disabled
-        console.log('Twilio integration is disabled. SMS reminders will not be sent.');
-    }
+        }
+    });
 });
-// Logs msg that reminder was set up successfully.
+
+// Logs msg that reminder job was set up successfully
 console.log('Daily scheduler for SMS reminders is set up.');
