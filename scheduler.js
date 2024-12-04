@@ -27,7 +27,17 @@ cron.schedule('0 0 * * *', () => {
             if (assignment.dueDate === tomorrowDateString) {
                 // Creates SMS msg for reminder and retrieves phone # to send SMS from and sneds using Twilio
                 const message = `Reminder: Your assignment '${assignment.title}' is due tomorrow (${assignment.dueDate}).`;
-                const phoneNumber = process.env.TWILIO_PHONE_NUMBER;
+                const phoneNumber = localStorage.getItem('phoneNumber'); // Get phone number from local storage
+                    if (phoneNumber && enableTwilio) {
+                        testCanvasData.assignments.forEach(assignment => {
+                            if (assignment.dueDate === tomorrowDateString) {
+                            const message = `Reminder: Your assignment '${assignment.title}' is due tomorrow (${assignment.dueDate}).`;
+                            sendSms(phoneNumber, message);
+                        }
+                    });
+                } else {
+                    console.log('Twilio integration is disabled or phone number not set. SMS reminders will not be sent.');
+                }
 
                 // Send reminder via Twilio
                 sendSms(phoneNumber, message);
