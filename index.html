@@ -392,7 +392,26 @@
 
             }
         }
+        
+        function subscribeToSMS() {
+            const phoneNumber = prompt("Enter your phone number for SMS notifications (include country code, e.g., +1234567890):");
+            if (phoneNumber) {
+                // Validate phone number format (basic validation)
+                const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+                if (!phoneRegex.test(phoneNumber)) {
+                    alert("Invalid phone number format. Please include your country code (e.g., +1234567890).");
+                    return;
+                }
 
+                // Save the phone number in localStorage
+                localStorage.setItem('smsSubscription', phoneNumber);
+                alert(`You have subscribed to SMS notifications. Notifications will be sent to ${phoneNumber}.`);
+                document.getElementById('subscription-message').innerText = `Subscribed! Notifications will be sent to ${phoneNumber}.`;
+            } else {
+                alert("Subscription canceled or invalid phone number.");
+            }
+        }
+        
         //Function to assign colors using current date and the due data
         function getStatusColor(dueDate) {
             const due = new Date(dueDate);
@@ -428,26 +447,7 @@
                 return 'gray'; //Color for assignment that is past due
             }
         }
-        
-        function subscribeToSMS() {
-            const phoneNumber = prompt("Enter your phone number for SMS notifications (include country code, e.g., +1234567890):");
-            if (phoneNumber) {
-                // Validate phone number format (basic validation)
-                const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-                if (!phoneRegex.test(phoneNumber)) {
-                    alert("Invalid phone number format. Please include your country code (e.g., +1234567890).");
-                    return;
-                }
 
-                // Save the phone number in localStorage
-                localStorage.setItem('smsSubscription', phoneNumber);
-                alert(`You have subscribed to SMS notifications. Notifications will be sent to ${phoneNumber}.`);
-                document.getElementById('subscription-message').innerText = `Subscribed! Notifications will be sent to ${phoneNumber}.`;
-            } else {
-                alert("Subscription canceled or invalid phone number.");
-            }
-        }
-        
         async function sendSMSNotification(assignment) {
             const phoneNumber = localStorage.getItem('smsSubscription'); // Retrieve the subscription
             if (!phoneNumber) {
