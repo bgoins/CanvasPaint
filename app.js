@@ -60,11 +60,11 @@ const testCanvasData = {
         { num: 3010, name: 'Social and Ethical Imp. of Computing', section: 1 }
     ],
     assignments: [
-        { num: 3300, title: 'Assignment 5', dueDate: '2024-11-27' },
-        { num: 3080, title: 'HW 6', dueDate: '2024-11-25' },
-        { num: 3080, title: 'HW 7', dueDate: '2024-12-27' },
-        { num: 3010, title: 'Essay', dueDate: '2024-11-27' },
-        { num: 3090, title: 'Chapter 5', dueDate: '2024-11-26' },
-        { num: 3010, title: 'Final', dueDate: '2024-12-02' }
+        { num: 3300, title: 'Assignment 5', dueDate: '2024-11-27' , notified: false },
+        { num: 3080, title: 'HW 6', dueDate: '2024-11-25' , notified: false },
+        { num: 3080, title: 'HW 7', dueDate: '2024-12-27' , notified: false },
+        { num: 3010, title: 'Essay', dueDate: '2024-11-27' , notified: false },
+        { num: 3090, title: 'Chapter 5', dueDate: '2024-11-26' , notified: false },
+        { num: 3010, title: 'Final', dueDate: '2024-12-02' , notified: false }
     ]
 };
