@@ -413,11 +413,6 @@
 
             // Compare the due date with the date of the indicator
             if (due < redIndicator && due >= today) {
-                // Send SMS notification if the assignment is red and has not been notified
-                if (assignment && !assignment.notified) {
-                    sendSMSNotification(assignment); // Send SMS
-                    assignment.notified = true; // Mark the assignment as notified to avoid duplicates
-                }
                 return 'red';
             } else if (due < yellowIndicator && due >= today) {
                 return 'goldenrod';
