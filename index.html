@@ -313,8 +313,9 @@
                         const statusCircle = document.createElement('span');
                         statusCircle.classList.add('status-circle');
 
-                        //Retrieve correspronding color for color indicator circle and add next to assignment name
-                        statusCircle.style.backgroundColor = getStatusColor(assignment.dueDate);
+                        // Retrieve corresponding color for the color indicator circle and add next to assignment name
+                        const color = getStatusColor(assignment.dueDate, assignment); // Pass the assignment to handle notifications
+                        statusCircle.style.backgroundColor = color;
                         assignmentItem.appendChild(statusCircle);
 
                         const assignmentText = document.createTextNode(` ${assignment.title} (Due: ${assignment.dueDate})`);
