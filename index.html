@@ -418,6 +418,7 @@
                 alert("Subscription canceled or invalid phone number.");
             }
         }
+        
         function unsubscribeFromSMS() {
             const phoneNumber = localStorage.getItem('smsSubscription');
 
@@ -433,6 +434,7 @@
                 document.getElementById('subscription-message').innerText = "You are not subscribed to SMS notifications.";
             }
         }
+        
         //Function to assign colors using current date and the due data
         function getStatusColor(dueDate) {
             const due = new Date(dueDate);
