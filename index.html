@@ -428,7 +428,55 @@
                 return 'gray'; //Color for assignment that is past due
             }
         }
+        
+        function subscribeToSMS() {
+            const phoneNumber = prompt("Enter your phone number for SMS notifications (include country code, e.g., +1234567890):");
+            if (phoneNumber) {
+                // Validate phone number format (basic validation)
+                const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+                if (!phoneRegex.test(phoneNumber)) {
+                    alert("Invalid phone number format. Please include your country code (e.g., +1234567890).");
+                    return;
+                }
 
+                // Save the phone number in localStorage
+                localStorage.setItem('smsSubscription', phoneNumber);
+                alert(`You have subscribed to SMS notifications. Notifications will be sent to ${phoneNumber}.`);
+                document.getElementById('subscription-message').innerText = `Subscribed! Notifications will be sent to ${phoneNumber}.`;
+            } else {
+                alert("Subscription canceled or invalid phone number.");
+            }
+        }
+        
+        async function sendSMSNotification(assignment) {
+            const phoneNumber = localStorage.getItem('smsSubscription'); // Retrieve the subscription
+            if (!phoneNumber) {
+                console.log("No phone number subscribed for SMS notifications.");
+                return;
+            }
+
+            try {
+                const response = await fetch('https://textbelt.com/text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: phoneNumber,
+                        message: `Reminder: Your assignment "${assignment.title}" is due tomorrow!`,
+                        key: 'your_paid_key', // Replace with your paid TextBelt key
+                    }),
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    console.log('SMS notification sent successfully!');
+                } else {
+                    console.error('Failed to send SMS:', data.error);
+                }
+            } catch (error) {
+                console.error('Error sending SMS:', error);
+            }
+        }
+        
         //Function to update color indicators based on user specifications
         function updateIndicators() {
 
