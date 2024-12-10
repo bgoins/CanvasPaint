@@ -222,6 +222,7 @@
             <h3>SMS Notifications</h3>
             <p>Subscribe to SMS reminders for assignments marked as red:</p>
             <button id="subscribe-btn" onclick="subscribeToSMS()">Subscribe to Text Messages</button>
+            <button id="unsubscribe-btn" onclick="unsubscribeFromSMS()">Unsubscribe from Text Messages</button>
             <div id="subscription-message"></div>
         </div>
 
@@ -417,7 +418,21 @@
                 alert("Subscription canceled or invalid phone number.");
             }
         }
-        
+        function unsubscribeFromSMS() {
+            const phoneNumber = localStorage.getItem('smsSubscription');
+
+            if (!phoneNumber) {
+                alert("You are not currently subscribed to SMS notifications.");
+                return;
+            }
+
+            const confirmUnsubscribe = confirm(`Are you sure you want to unsubscribe from SMS notifications for ${phoneNumber}?`);
+            if (confirmUnsubscribe) {
+                localStorage.removeItem('smsSubscription');
+                alert("You have successfully unsubscribed from SMS notifications.");
+                document.getElementById('subscription-message').innerText = "You are not subscribed to SMS notifications.";
+            }
+        }
         //Function to assign colors using current date and the due data
         function getStatusColor(dueDate) {
             const due = new Date(dueDate);
