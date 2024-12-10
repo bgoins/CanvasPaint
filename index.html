@@ -213,16 +213,6 @@
                 <label> (Automatically set to 8 or more days from due.)</label>
 
             </div>
-              <!-- Input field for user's phone number -->
-            <div>
-                <label>Phone Number (for SMS reminders):</label>
-                <input type="tel" id="phone-number" placeholder="+15555555555">
-            </div>
-            <!-- Input field for customizing reminder days -->
-            <div>
-                <label>Days before due date to send reminder:</label>
-                <input type="number" id="reminder-days" min="1" placeholder="Enter number of days">
-             </div>
             <!--Button that calls function to update color indicator meaning when pressed-->
             <button onclick="updateIndicators()">Save Changes</button>
 
@@ -367,7 +357,7 @@
         ws.onclose = () => {
             console.log('Disconnected from the WebSocket server');
         };
-        
+
         // Function to verify an assignment is due within two weeks
         function upcomingAssignment(dueDate) {
             const due = new Date(dueDate);
@@ -376,33 +366,7 @@
             twoWeeksOut.setDate(today.getDate() + 14);
             return due <= twoWeeksOut;
         }
-        
-        // Function to verify an assignment is due within two weeks
-        function updateSettings() {
-            let phoneNumber = document.querySelector('#phone-number').value;
-            let reminderDays = document.querySelector('#reminder-days').value;
 
-            const phoneRegex = /^\+\d{10,}$/;
-            if (phoneRegex.test(phoneNumber)) {
-                localStorage.setItem('phoneNumber', phoneNumber);
-                alert('Phone number updated successfully!');
-
-                // Send phone number and reminder days to the WebSocket server
-                if (ws.readyState === WebSocket.OPEN) {
-                    const data = {
-                        type: 'updateSettings',
-                        phoneNumber: phoneNumber,
-                        reminderDays: reminderDays
-                     };
-                    ws.send(JSON.stringify(data));
-                } else {
-                    console.error('WebSocket is not open. Unable to send settings.');
-                }
-
-            } else {
-                alert('Please enter a valid phone number in the format: +1234567890');
-            }
-        }
         //Function that adds a an assignment based on user input when Add Assignment button is clicked
         function addAssignment(courseNum) {
             //Prompt user for assignment name and date
